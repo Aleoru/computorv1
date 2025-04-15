@@ -1,10 +1,15 @@
 import sys
 import re
 
-def check_expr(expr:str):
+def check_expr(expr:str): #contemplar si pasan = 0 desde el principio
 	regex = r" ?[+|-]? ?\d+(\.\d+)? \* X\^\d+ ?"
+	regex_empty = r" ?0 ?"
 
 	monos = list()
+
+	if re.match(regex_empty, expr):
+		monos.append(expr[0:re.match(regex_empty, expr).span()[1]])
+		return monos
 
 	while len(expr) > 0:
 		span = re.match(regex, expr)
@@ -51,7 +56,48 @@ def print_reduced_form(monos:dict):
 	print("= 0")
 	print(monos)
 	return 0
+
+def my_sqrt(num, precision = 0.00001):
+	if num < 0:
+		return "Error: Cannot calculate the square root of a negative num"
+    
+	res = num / 2.0
+	while abs(res**2 - num) > precision:
+		res = (res + num / res) / 2
+    
+	return res
+
+def second_grade_equation(monos):
+	print(monos)
+	a = monos[-1][1]
+	b = c = 0
+	for mono in monos:
+		if mono[0] == 1:
+			b = mono[1]
+		elif mono[0] == 0:
+			c = mono[1]
+
+	print(f"a: {a}, b: {b}, c: {c}")
+	dis = b*b - 4*a*c
+	print("dis =", dis)
+
+	if dis < 0:
+		print("Discriminant is strictly negative, the two complex solutions are:")
+		res = my_sqrt(dis * -1)
+		print(f"-{b}/{2*a} + {res}i/{2*a}")
+		print(f"-{b}/{2*a} - {res}i/{2*a}")
+	if dis > 0:
+		print("Discriminant is strictly positive, the two solutions are:")
+		res = ((-b + my_sqrt(dis) / (2*a)))
+		res_neg = ((-b - my_sqrt(dis) / (2*a)))
+		print(res)
+		print(res_neg)
+	if dis == 0:
+		res = -b / (2*a)
+		print("The solution is:")
+		print(res)
 	
+	return
 
 def computor():
 	exprs = sys.argv[1].split("=")
@@ -74,22 +120,23 @@ def computor():
 		second_monos.append(parse_one_mono(mono))
 	reduced_form = dict()
 
-	for lista in first_monos:
-		if lista[0] in reduced_form:
-				reduced_form[lista[0]] += lista[1]
+	for list_m in first_monos:
+		if list_m[0] in reduced_form:
+				reduced_form[list_m[0]] += list_m[1]
 		else:
-			reduced_form.update({lista[0]: lista[1]})
+			reduced_form.update({list_m[0]: list_m[1]})
 
-	for lista in second_monos:
-		if lista[0] in reduced_form:
-				reduced_form[lista[0]] += lista[1] * -1
+	for list_m in second_monos:
+		if list_m[0] in reduced_form:
+				reduced_form[list_m[0]] += list_m[1] * -1
 		else:
-			reduced_form.update({lista[0]: lista[1] * -1})
+			reduced_form.update({list_m[0]: list_m[1] * -1})
 	#print("Res: ", reduced_form)
 	sorted_reduced = sorted(reduced_form.items())
 
 	print_reduced_form(sorted_reduced)
 	print("Polynomian degree: ", sorted_reduced[-1][0])
+	second_grade_equation(sorted_reduced)
 
 if __name__ =="__main__":
 	computor()
