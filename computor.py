@@ -62,7 +62,7 @@ def my_sqrt(num, precision = 0.00001):
 	while abs(res**2 - num) > precision:
 		res = (res + num / res) / 2
     
-	return round(res)
+	return round(res, 6)
 
 def gcd(a, b):
 	while b != 0:
@@ -75,7 +75,7 @@ def simpl_fraction(num, den, precision:int = 6):
 	if div == 1:
 		return num, den
 	else:
-		return num // div, den // div
+		return round(num/div, 6), round(den/div, 6)
 
 def second_grade_equation(monos):
 	a = monos[-1][1]
@@ -97,8 +97,8 @@ def second_grade_equation(monos):
 		print(f"{int(rnum)}/{int(rden)} - {int(inum)}i/{int(iden)}")
 	if dis > 0:
 		print("Discriminant is strictly positive, the two solutions are:")
-		res = ((-b + my_sqrt(dis) / (2*a)))
-		res_neg = ((-b - my_sqrt(dis) / (2*a)))
+		res = (((-b + my_sqrt(dis)) / (2*a)))
+		res_neg = (((-b - my_sqrt(dis)) / (2*a)))
 		print(round(res, 6))
 		print(round(res_neg, 6))
 	if dis == 0:
@@ -145,7 +145,7 @@ def computor():
 	print_reduced_form(sorted_reduced)
 	print("Polynomian degree: ", sorted_reduced[-1][0])
 	if sorted_reduced[-1][0] > 2:
-		print("No tiene solucion") #mirar subject y cambiar
+		print("The polynomial degree is strictly greater than 2, I can't solve.") #mirar subject y cambiar
 	elif sorted_reduced[-1][0] == 2:
 		second_grade_equation(sorted_reduced)
 	elif sorted_reduced[-1][0] == 1:
