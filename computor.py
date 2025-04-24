@@ -48,9 +48,12 @@ def print_reduced_form(monos:dict):
 	for key,value in monos:
 		if value >= 0 and key is not monos[0][0]:
 			print("+ ", end="")
+		elif value <= 0 and key is monos[0][0]:
+			print("-", end="")
 		elif value <= 0:
 			print("- ", end="")
-		print(f"{abs(value)} * X^{key} ", end="")
+		coef = abs(value) if abs(value) - int(abs(value)) != 0 else int(abs(value))
+		print(f"{coef} * X^{key} ", end="")
 	print("= 0")
 	return 0
 
@@ -97,14 +100,14 @@ def second_grade_equation(monos):
 		print(f"{int(rnum)}/{int(rden)} - {int(inum)}i/{int(iden)}")
 	if dis > 0:
 		print("Discriminant is strictly positive, the two solutions are:")
-		res = (((-b + my_sqrt(dis)) / (2*a)))
 		res_neg = (((-b - my_sqrt(dis)) / (2*a)))
-		print(round(res, 6))
-		print(round(res_neg, 6))
+		res = (((-b + my_sqrt(dis)) / (2*a)))
+		print(round(res_neg if abs(res_neg) - int(abs(res_neg)) != 0 else int(res_neg), 6))
+		print(round(res if abs(res) - int(abs(res)) != 0 else int(res), 6))
 	if dis == 0:
 		res = -b / (2*a)
 		print("The solution is:")
-		print(res)
+		print(res if abs(res) - int(abs(res)) != 0 else int(res))
 	
 	return
 
@@ -143,15 +146,27 @@ def computor():
 	sorted_reduced = sorted(reduced_form.items())
 
 	print_reduced_form(sorted_reduced)
-	print("Polynomian degree: ", sorted_reduced[-1][0])
+
+	any_sol = True
+	for mono in sorted_reduced:
+		if mono[1] != 0:
+			any_sol = False
+
+	if any_sol:
+		print("Any real number is a solution.")
+		return
+	elif sorted_reduced[-1][0] == 0:
+		print("No solution.")
+		return
+
+	print("Polynomian degree:", sorted_reduced[-1][0])
+
 	if sorted_reduced[-1][0] > 2:
 		print("The polynomial degree is strictly greater than 2, I can't solve.") #mirar subject y cambiar
 	elif sorted_reduced[-1][0] == 2:
 		second_grade_equation(sorted_reduced)
 	elif sorted_reduced[-1][0] == 1:
 		print(f"The solution is:\n{(sorted_reduced[0][1] * -1) / sorted_reduced[1][1]}")
-	elif sorted_reduced[-1][0] == 0:
-		print("Ecuacion mal") #mirar subject y cambiar
 
 if __name__ =="__main__":
 	computor()
