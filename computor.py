@@ -3,15 +3,21 @@ import re
 
 def check_expr(expr:str): #contemplar si pasan = 0 desde el principio
 	regex = r" ?[+|-]? ?\d+(\.\d+)? \* X\^\d+ ?"
+	regex_s = r" ?[+|-] ?\d+(\.\d+)? \* X\^\d+ ?"
 	regex_empty = r" ?0 ?"
 
 	monos = list()
 	if re.match(regex_empty, expr):
 		monos.append(expr[0:re.match(regex_empty, expr).span()[1]])
 		return True
-
+	
+	first = True
 	while len(expr) > 0:
-		span = re.match(regex, expr)
+		if first:
+			span = re.match(regex, expr)
+			first = False
+		else:
+			span = re.match(regex_s, expr)
 		if span is None:
 			return (False)
 		pos = span.span()[1]
@@ -162,11 +168,15 @@ def computor():
 	print("Polynomian degree:", sorted_reduced[-1][0])
 
 	if sorted_reduced[-1][0] > 2:
-		print("The polynomial degree is strictly greater than 2, I can't solve.") #mirar subject y cambiar
+		print("The polynomial degree is strictly greater than 2, I can't solve.")
 	elif sorted_reduced[-1][0] == 2:
 		second_grade_equation(sorted_reduced)
 	elif sorted_reduced[-1][0] == 1:
-		print(f"The solution is:\n{(sorted_reduced[0][1] * -1) / sorted_reduced[1][1]}")
+		if len(sorted_reduced) == 1:
+			print(f"The solution is:\n0")
+		else:
+			res = (sorted_reduced[0][1] * -1) / sorted_reduced[1][1]
+			print(f"The solution is:\n{res if abs(res) - int(abs(res)) != 0 else int(res)}")
 
 if __name__ =="__main__":
 	computor()
