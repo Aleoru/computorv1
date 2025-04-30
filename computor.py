@@ -102,7 +102,7 @@ def second_grade_equation(monos):
 		res = my_sqrt(dis * -1)
 		rnum, rden = simpl_fraction(-b, 2*a)
 		inum, iden = simpl_fraction(res, 2*a)
-		print(f"{int(rnum)}/{int(rden)} + {int(inum)}i/{int(iden)}")
+		print(f"{(int(rnum))}/{int(rden)} + {int(inum)}i/{int(iden)}")
 		print(f"{int(rnum)}/{int(rden)} - {int(inum)}i/{int(iden)}")
 	if dis > 0:
 		print("Discriminant is strictly positive, the two solutions are:")
@@ -176,7 +176,7 @@ def computor():
 			print(f"The solution is:\n0")
 		else:
 			res = (sorted_reduced[0][1] * -1) / sorted_reduced[1][1]
-			print(f"The solution is:\n{res if abs(res) - int(abs(res)) != 0 else int(res)}")
+			print(f"The solution is:\n{round(res, 6) if abs(res) - int(abs(res)) != 0 else int(res)}")
 
 if __name__ =="__main__":
 	computor()
